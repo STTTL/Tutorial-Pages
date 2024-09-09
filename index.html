@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Analysis Concepts Tutorial</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <div id="tutorial-container">
+        <!-- Welcome Page -->
+        <div id="page1" class="page active">
+            <div class="container">
+                <h1>Welcome to Data Analysis Concepts Tutorial</h1>
+                <p>Choose your learning path:</p>
+                <div class="path-choice">
+                    <button class="path-button" onclick="startTutorial('data-resilience')">Data Resilience</button>
+                    <button class="path-button" onclick="startTutorial('causal-responsibility')">Causal Responsibility</button>
+                </div>
+                <div class="key-point">
+                    <p><strong>Hint:</strong> If you're new to these concepts, we recommend starting with Data Resilience.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="page2" class="page">
+            <div class="slide">
+                <h1>What is Data Resilience?</h1>
+                
+                <div class="key-point">
+                    <p><strong>Data Resilience</strong> refers to the strength of a database query's result to withstand changes, such as the removal of data entries. Think of it as how tough the result of a query is, similar to how a building withstands storms.</p>
+                </div>
+                
+                <h3>Key Question to Explore:</h3>
+                <p>How many data entries (or tuples) need to be removed to affect the outcome of a query?</p>
+                <h3>Why is it Important?</h3>
+                <ul>
+                  <li>Identifies which data is most crucial for maintaining accurate results.</li>
+                  <li>Helps pinpoint weaknesses in your data's structure or setup.</li>
+                  <li>Guides how to protect and manage your data effectively.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="page3" class="page">
+            <div class="slide">
+                <h1>Bridge Analogy for Data Resilience</h1>
+
+                <p>Imagine a bridge supported by pillars, each representing a piece of data in your query. Removing the right combination of pillars (data pieces) could cause the bridge (query result) to collapse. This interactive simulation lets you explore which pillars are crucial for the bridge's stability.</p>
+                <p>Try to click on the pillars to remove them to collapse the bridge!</p>
+                
+                <div id="bridgeVisualization"></div>
+                <button id="resetBridge">Reset Bridge</button>
+        
+                <ul>
+                    <li>The bridge represents the query result you need to keep stable.</li>
+                    <li>Find out the smallest set of pillars, removing which will collapse the bridge (a concept known as the 'Resilience Set').</li>
+                    <li>Possible resilience sets include combinations like {A, B} or {B, C}—meaning these groups of data are critical.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="page4" class="page">
+            <div class="slide">
+                <h1>Database Example: Understanding Resilience in Action</h1>
+                <p>Let's look at an example involving an employee directory and department listings. By manipulating these tables, you can see directly how removing certain data affects the overall query results.</p>            
+                <p>Consider two tables: Employees and Departments:</p>
+                <div class="tables-container">
+                    <div class="table-wrapper">
+                        <h3>Employees</h3>
+                        <table id="employeesTable">
+                            <tr><th>EmpID</th><th>Name</th><th>DeptID</th></tr>
+                            <tr class="clickable"><td>1</td><td>Alice</td><td>101</td></tr>
+                            <tr class="clickable"><td>2</td><td>Bob</td><td>102</td></tr>
+                            <tr class="clickable"><td>3</td><td>Charlie</td><td>101</td></tr>
+                            <tr class="clickable"><td>4</td><td>David</td><td>103</td></tr>
+                        </table>
+                    </div>
+                    
+                    <div class="table-wrapper">
+                        <h3>Departments</h3>
+                        <table id="departmentsTable">
+                            <tr><th>DeptID</th><th>DeptName</th></tr>
+                            <tr class="clickable"><td>101</td><td>HR</td></tr>
+                            <tr class="clickable"><td>102</td><td>IT</td></tr>
+                            <tr class="clickable"><td>103</td><td>Finance</td></tr>
+                        </table>
+                    </div>
+                </div>
+                <p>Query: Find all employees who work in the HR department.</p>
+                <div class="query">
+                    <p>Q(Name) :- Employees(EmpID, Name, DeptID), Departments(DeptID, "HR")</p>
+                </div>
+                
+                <h3>Result</h3>
+                <table id="resultTable">
+                    <tr><th>EmpID</th><th>Name</th><th>DeptID</th><th>DeptName</th></tr>
+                    <tr><td>1</td><td>Alice</td><td>101</td><td>HR</td></tr>
+                    <tr><td>3</td><td>Charlie</td><td>101</td><td>HR</td></tr>
+                </table>
+                <p><strong>Exercise:</strong> Try deleting different combinations of entries to explore how resilient the query result is to changes.</p>
+
+                <button id="resetButton">Reset Tables</button>
+                <p>Count of removed tuples: <span id="resilienceCount">0</span></p>
+                <div id="hintBox" style="display: none;">This is not the best way to break the query.</div>        
+            </div>
+        </div>
+        
+
+        <div id="page5" class="page">
+            <div class="slide">
+                <h1>Calculating Resilience Using Integer Linear Programming (ILP)</h1>
+                <p>Integer Linear Programming (ILP) is a mathematical method used to find the most efficient way to change a database to affect a query's outcome. Here, we'll go through setting up an ILP model to understand how minimal changes can impact your query results.</p>
+                <p>Let's go back to the Employee-Department example to see the query again.</p>
+                <h2>Query</h2>
+                <div class="query">
+                    <p>Q(Name) :- Employees(EmpID, Name, DeptID), Departments(DeptID, "HR")</p>
+                </div>
+                <p>This query finds all employees who work in the HR department.</p>
+                
+                <h2>Witnesses</h2>
+                <p>Witnesses are combinations of tuples that satisfy the query:</p>
+                <div class="witness">
+                    <p>w1 = {(1, Alice, 101), (101, HR)}</p>
+                    <p>w2 = {(3, Charlie, 101), (101, HR)}</p>
+                </div>
+                
+                <h2>Integer Linear Programming (ILP) Formulation</h2>
+                <p>We can use ILP to calculate the resilience value. Here's how we set it up:</p>
+                
+                <h3>1. Variables</h3>
+                <p>We create a binary variable for each tuple in our database:</p>
+                <div class="ilp">
+                    <p>X[e1] for (1, Alice, 101)</p>
+                    <p>X[e3] for (3, Charlie, 101)</p>
+                    <p>X[d101] for (101, HR)</p>
+                </div>
+                
+                <h3>2. Constraints</h3>
+                <p>For each witness, we create a constraint ensuring at least one tuple from that witness is deleted:</p>
+                <div class="ilp">
+                    <p>X[e1] + X[d101] ≥ 1 (for w1)</p>
+                    <p>X[e3] + X[d101] ≥ 1 (for w2)</p>
+                </div>
+                
+                <h3>3. Objective Function</h3>
+                <p>We want to minimize the number of deletions:</p>
+                <div class="ilp">
+                    <p>Minimize: X[e1] + X[e3] + X[d101]</p>
+                </div>
+                
+                <h3>4. Solving the ILP</h3>
+                <p>Solving this ILP gives us:</p>
+                <div class="ilp">
+                    <p>X[e1] = 0, X[e3] = 0, X[d101] = 1</p>
+                    <p>Objective value (Resilience) = 1</p>
+                </div>
+
+                <p>By following this method, you can determine the least amount of data that needs to be changed to alter the result, showcasing the resilience of the query.</p>
+                
+                <h2>Resilience Value</h2>
+                <div class="key-point">
+                    <p>Resilience Value = 1 (from the ILP solution)</p>
+                </div>
+                
+                <h2>Explanation</h2>
+                <p>The ILP solution shows that:</p>
+                <ul>
+                    <li>Deleting the HR department tuple (X[d101] = 1) is the minimal change to affect the query result.</li>
+                    <li>This single deletion satisfies both constraints (covers both witnesses).</li>
+                    <li>The objective value of 1 indicates that only one tuple needs to be deleted to change the query result.</li>
+                </ul>
+                
+                <h2>Why ILP?</h2>
+                <p>ILP is crucial for resilience calculation because:</p>
+                <ul>
+                    <li>It can handle complex queries and large databases efficiently.</li>
+                    <li>It guarantees finding the global minimum (smallest resilience set).</li>
+                    <li>It can be extended to handle more complex resilience scenarios and constraints.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="navigation" style="display: none;">
+        <button onclick="changePage(-1)" id="prevBtn">Previous</button>
+        <button onclick="changePage(1)" id="nextBtn">Next</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

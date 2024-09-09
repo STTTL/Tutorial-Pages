@@ -1,0 +1,156 @@
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f0f0f0;
+}
+
+.container, .slide {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1, h2, h3 {
+    color: #2c3e50;
+}
+
+h1 {
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+}
+
+.query, .witness, .resilience-set, .ilp, .hint {
+    background-color: #e8f4f8;
+    border-left: 5px solid #3498db;
+    padding: 10px;
+    margin: 10px 0;
+    font-family: monospace;
+}
+
+.key-point {
+    background-color: #e8f8e8;
+    border-left: 5px solid #2ecc71;
+    padding: 10px;
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+.path-choice {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+}
+
+.path-button {
+    padding: 15px 30px;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.path-button:hover {
+    background-color: #2980b9;
+}
+
+.bridge {
+    width: 100%;
+    height: 200px;
+    background-color: #e8f4f8;
+    position: relative;
+    margin: 20px 0;
+}
+
+.pillar {
+    width: 60px;
+    height: 150px;
+    background-color: #3498db;
+    position: absolute;
+    bottom: 0;
+}
+
+.deck {
+    width: 100%;
+    height: 20px;
+    background-color: #34495e;
+    position: absolute;
+    top: 30px;
+}
+
+.pillar-label {
+    position: absolute;
+    bottom: -25px;
+    width: 60px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.tables-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.table-wrapper {
+    width: 30%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #3498db;
+    color: white;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.clickable:hover {
+    background-color: #f1f1f1;
+}
+
+.deleted {
+    text-decoration: line-through;
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+#navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+#hintBox {
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #fff3cd;
+    border-left: 5px solid #ffecb5;
+    color: #856404;
+}
